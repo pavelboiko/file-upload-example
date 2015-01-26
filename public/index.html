@@ -19,42 +19,35 @@
 $( document ).ready(function() {
 	var url = window.location.hostname === 'blueimp.github.io' ?
 	'//jquery-file-upload.appspot.com/' : 'server/php/';
-	
-	function isIE () {
-	  var myNav = navigator.userAgent.toLowerCase();
-	  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
-	}
 
-	function reCall() {
-		$('#fileupload').fileupload({
-			url: url,
-			dataType: "json",        
-			datatype:"json",
-			forceIframeTransport: true,    // VERY IMPORTANT.  you will get 405 Method Not Allowed if you don't add this.
-			add: function (e, data) {
-				if (data.autoUpload || data.autoUpload !== false) {
-					$.ajax({
-						url:"/s",  
-						type: "POST",
-						success:function(response) {						
-							$.each(data.files, function (index, file) {							
-								data.process().done(function () {							
-									var fields = response.fields;								
-									fields.key = fields.key + file.name;								
-									data.url = response.action;
-									data.formData = fields;
-									data.submit();
-									
-								});
-							}); 
-							if (isIE () == 8) reCall();
-						}
-					});
-				}
+	$('#fileupload').fileupload({
+		url: url,
+		replaceFileInput: false,
+		forceIframeTransport: true,    // VERY IMPORTANT.  you will get 405 Method Not Allowed if you don't add this.
+		add: function (e, data) {
+			if (data.autoUpload || data.autoUpload !== false) {
+				$.ajax({
+					url:"/s",  
+					type: "POST",
+					success:function(response) {
+						$.each(data.files, function (index, file) {
+							data.process().done(function () {
+								var fields = response.fields;
+								fields.key = fields.key + file.name;
+								data.url = response.action;
+								data.formData = fields;
+								data.submit();
+								$('#fileupload').val('');
+							});
+						}); 
+						
+					}
+				});
 			}
-		});
 		}
-	reCall();
+	});
+
+	
 });
 </script>
 </html>
