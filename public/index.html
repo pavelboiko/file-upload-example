@@ -32,7 +32,6 @@ $( document ).ready(function() {
 			datatype:"json",
 			forceIframeTransport: true,    // VERY IMPORTANT.  you will get 405 Method Not Allowed if you don't add this.
 			add: function (e, data) {
-				console.log('add');
 				if (data.autoUpload || data.autoUpload !== false) {
 					$.ajax({
 						url:"/s",  
